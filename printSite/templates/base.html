@@ -1,0 +1,44 @@
+{% load static %}
+<!--Нужно чтобы подключить статику-->
+
+{% load pstags %}
+
+<html>
+<head>
+    <link type="text/css" href="{% static 'justsite/css/styles.css' %}" rel="stylesheet" />
+    <title>{{title}}</title>
+</head>
+
+
+
+<a href="{% url 'home' %}">Главная страница</a>
+{% block mainmenu %}
+
+{% for m in menu %}
+<a href="{% url m.url_name %}">{{m.title}}</a>
+{% endfor %}
+{% endblock mainmenu %}
+
+
+{% if cat_selected == 0 %}
+<p>Все категории</p>
+{% else %}
+<a href="{% url 'home' %}">Все категории</a>
+{% endif %}
+{% show_categories cat_selected %}
+
+<p>{% show_all_tags %}</p>
+
+<body>
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+</body>
+</html>

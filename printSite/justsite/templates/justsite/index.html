@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+
+<ul>
+     {% for i in items %}
+         <li>
+             <div>
+             <p>Категория: {{i.cat.name}}</p>
+            </div>
+             {% if i.photo %}
+                   <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
+             {% endif %}
+             <h2>{{ i.title }}</h2>
+             <div>{{i.content}}</div>>
+             <p><a href="{{ i.get_absolute_url }}">Читать пост</a>
+         </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
