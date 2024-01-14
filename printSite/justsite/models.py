@@ -27,7 +27,7 @@ class Items(models.Model):
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                        default=Status.DRAFT, verbose_name="Статус")
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts', verbose_name="Категория")
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='items', verbose_name="Категория")
     tags = models.ManyToManyField('TagItem', blank=True, related_name='tags', verbose_name="Теги")
 
     published = PublishedModel()
@@ -44,13 +44,13 @@ class Items(models.Model):
         indexes = [
             models.Index(fields=['-time_create']),
         ]
-        verbose_name = "Известные женщины"
-        verbose_name_plural = 'Известные женщины'
+        verbose_name = "Товары магазина"
+        verbose_name_plural = 'Товары магазина'
 
 
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'post_slug': self.slug})
+        return reverse('item', kwargs={'item_slug': self.slug})
 
 
 

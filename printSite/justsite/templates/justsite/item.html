@@ -2,15 +2,11 @@
 
 
 {% block breadcrumbs %}
-<!--все разрешения подгружаются в шаблоны, соответственно с ними можно работать-->
-{% if perms.women.change_women %}
-<p ><a href="{% url 'edit_page' post.slug %}">Редактировать</a></p>
-{% endif %}
 
 <!-- Теги -->
-{% with post.tags.all as tags %}
+{% with item.tags.all as tags %}
 {% if tags %}
-<ul class="tags-list">
+<ul>
     <li>Теги:</li>
     {% for t in tags %}
     <li><a href="{{t.get_absolute_url}}">{{t.tag}}</a></li>
@@ -22,11 +18,11 @@
 
 
 {% block content %}
-<h1>{{post.title}}</h1>
+<h1>{{item.name}}</h1>
  
 {% if post.photo %}
 <p ><img class="img-article-left" src="{{post.photo.url}}"></p>
 {% endif %}
  
-{{post.content|linebreaks}}
+{{item.description}}
 {% endblock %}

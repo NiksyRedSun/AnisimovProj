@@ -16,7 +16,7 @@ def get_menu():
 
 @register.inclusion_tag('justsite/list_categories.html')
 def show_categories(cat_selected_id=0):
-    cats = Category.objects.annotate(total=Count("posts")).filter(total__gt=0)
+    cats = Category.objects.annotate(total=Count("items")).filter(total__gt=0)
     return {"cats": cats, "cat_selected": cat_selected_id}
 
 

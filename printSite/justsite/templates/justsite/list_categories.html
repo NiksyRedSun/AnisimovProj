@@ -6,8 +6,8 @@
 
 {% for cat in cats %}
          {% if cat.id == cat_selected %}
-                   <li class="selected">{{cat.name}}</li>
+                   <div>{{cat.name}}</div>
          {% else %}
-                   <li><a href="{{ cat.get_absolute_url }}">{{cat.name}}</a></li>
+                   <div><a href="{{ cat.get_absolute_url }}">{{cat.name}}</a></div>
          {% endif %}
 {% endfor %}

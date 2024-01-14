@@ -1,5 +1,4 @@
 {% load static %}
-<!--Нужно чтобы подключить статику-->
 
 {% load pstags %}
 
@@ -13,21 +12,21 @@
 
 <a href="{% url 'home' %}">Главная страница</a>
 {% block mainmenu %}
-
+{% get_menu as menu %}
 {% for m in menu %}
-<a href="{% url m.url_name %}">{{m.title}}</a>
+<div><a href="{% url m.url_name %}">{{m.title}}</a></div>
 {% endfor %}
 {% endblock mainmenu %}
-
+<br>
 
 {% if cat_selected == 0 %}
-<p>Все категории</p>
+<div>Все категории</div>
 {% else %}
-<a href="{% url 'home' %}">Все категории</a>
+<div><a href="{% url 'home' %}">Все категории</a></div>
 {% endif %}
 {% show_categories cat_selected %}
-
-<p>{% show_all_tags %}</p>
+<br>
+{% show_all_tags %}
 
 <body>
 
