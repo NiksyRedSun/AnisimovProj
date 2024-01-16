@@ -12,10 +12,15 @@
 
 <a href="{% url 'home' %}">Главная страница</a>
 {% block mainmenu %}
-{% get_menu as menu %}
-{% for m in menu %}
+
+{% for m in mainmenu %}
 <div><a href="{% url m.url_name %}">{{m.title}}</a></div>
 {% endfor %}
+{% if user.is_authenticated %}
+<div> {{user.username}} | <a href="{% url 'users:logout' %}">Выйти</a></div>
+{% else %}
+<div><a href="{% url 'users:login' %}">Войти</a> | <a href="#">Регистрация</a></div>
+{% endif %}
 {% endblock mainmenu %}
 <br>
 
@@ -24,6 +29,7 @@
 {% else %}
 <div><a href="{% url 'home' %}">Все категории</a></div>
 {% endif %}
+
 {% show_categories cat_selected %}
 <br>
 {% show_all_tags %}

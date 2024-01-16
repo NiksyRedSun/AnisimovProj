@@ -2,16 +2,12 @@ from django import template
 from django.db.models import Count
 
 from justsite.models import Category, TagItem
-from justsite.utils import menu
+
 
 
 register = template.Library()
 
 
-
-@register.simple_tag
-def get_menu():
-    return menu
 
 
 @register.inclusion_tag('justsite/list_categories.html')

@@ -1,8 +1,5 @@
 
 
-menu = [{'title': "О сайте", 'url_name': 'about'},
-        {'title': "Обратная связь", 'url_name': 'contact'},
-]
 
 
 # Наш первый миксин
@@ -10,6 +7,7 @@ class DataMixin:
     title_page = None
     extra_context = {}
     cat_selected = None
+
 
     def __init__(self):
         if self.title_page:
@@ -20,8 +18,7 @@ class DataMixin:
 
 
 
+
     def get_mixin_context(self, context, **kwargs):
-        context['menu'] = menu
-        context['cat_selected'] = None
         context.update(kwargs)
         return context

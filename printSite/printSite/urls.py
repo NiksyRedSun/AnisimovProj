@@ -21,7 +21,7 @@ from django.views.defaults import page_not_found
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('justsite.urls')),
-    # path('user/', include('users.urls', namespace="user"))
+    path('users/', include('users.urls', namespace="users")),
     path("__debug__/", include("debug_toolbar.urls")),
 
 ]

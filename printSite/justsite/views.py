@@ -52,7 +52,6 @@ class ShowItem(DataMixin, DetailView):
 
 
 
-
 class ItemCategory(DataMixin, ListView):
     template_name = 'justsite/index.html'
     context_object_name = 'items'
