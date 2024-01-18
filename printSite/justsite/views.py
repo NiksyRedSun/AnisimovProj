@@ -28,12 +28,13 @@ class PrintSiteHome(DataMixin, ListView):
 
 
 
-class AboutSite(DataMixin, TemplateView):
+class AboutSite(LoginRequiredMixin, DataMixin, TemplateView):
     template_name = 'justsite/index.html'
     title_page = "О сайте"
 
 
-class Contact(DataMixin, TemplateView):
+
+class Contact(LoginRequiredMixin, DataMixin, TemplateView):
     template_name = 'justsite/index.html'
     title_page = "Связаться с нами"
 
