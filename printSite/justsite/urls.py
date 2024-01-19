@@ -12,4 +12,6 @@ urlpatterns = [
     path('item/<slug:item_slug>/', views.ShowItem.as_view(), name="item"),
     path('category/<slug:cat_slug>', views.ItemCategory.as_view(), name="category"),
     path('tag/<slug:tag_slug>/', views.ItemsTags.as_view(), name='tag'),
+
+    path('to_cart/<int:item_id>/', views.to_cart, name="to_cart")
 ]

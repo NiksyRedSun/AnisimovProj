@@ -30,7 +30,8 @@ class RegisterUserForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if User.objects.filter(email=email).exists():
+        model = get_user_model()
+        if model.objects.filter(email=email).exists():
             raise forms.ValidationError("Такой E-mail уже существует!")
         return email
 
@@ -52,3 +53,5 @@ class UserPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(label="Старый пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     new_password1 = forms.CharField(label="Новый пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     new_password2 = forms.CharField(label="Подтверждение пароля", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+

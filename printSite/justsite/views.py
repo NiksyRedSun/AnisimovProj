@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
@@ -14,6 +15,7 @@ from justsite.utils import DataMixin
 
 
 # Create your views here.
+
 
 
 class PrintSiteHome(DataMixin, ListView):
@@ -70,7 +72,6 @@ class ItemCategory(DataMixin, ListView):
 
 
 
-
 class ItemsTags(DataMixin, ListView):
     template_name = 'justsite/index.html'
     context_object_name = 'items'
@@ -85,3 +86,16 @@ class ItemsTags(DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         tag = get_object_or_404(TagItem, slug=self.kwargs['tag_slug'])
         return self.get_mixin_context(context, title="Тег: " + tag.tag)
+
+
+
+
+@login_required
+def to_cart(request, item_id):
+    user = get_user_model().objects.get(pk=request.user.id)
+    item = Items.objects.get(pk=item_id)
+    user.cart.add(item)
+    print("Опа нихуя")
+    return HttpResponse()
+
+
