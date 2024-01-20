@@ -7,6 +7,13 @@ from justsite.models import Items
 
 
 class User(AbstractUser):
-    cart = models.ManyToManyField(Items, blank=True, related_name='items', verbose_name="Корзина")
+    cart = models.ManyToManyField(Items, blank=True, related_name='cart', verbose_name="Корзина", through="Cart")
+
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', db_constraint=False)
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='item', db_constraint=False)
+    count = models.IntegerField(default=1)
 
 

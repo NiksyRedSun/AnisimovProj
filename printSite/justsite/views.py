@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -9,9 +10,10 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
-
+from django.db.models import F, Value
 from justsite.models import Items, TagItem
 from justsite.utils import DataMixin
+from users.models import Cart
 
 
 # Create your views here.
@@ -92,10 +94,29 @@ class ItemsTags(DataMixin, ListView):
 
 @login_required
 def to_cart(request, item_id):
-    user = get_user_model().objects.get(pk=request.user.id)
-    item = Items.objects.get(pk=item_id)
-    user.cart.add(item)
-    print("Опа нихуя")
-    return HttpResponse()
+    try:
+        user = get_user_model().objects.get(pk=request.user.id)
+        item = Items.objects.get(pk=item_id)
+        if Cart.objects.filter(user=user).exists():
+            cart = Cart.objects.get(user=user, item=item)
+            cart.count += 1
+            cart.save()
+        else:
+            user.cart.add(item)
+        messages.add_message(request, messages.SUCCESS, 'Товар успешно добавлен в корзину')
+        return redirect(request.META['HTTP_REFERER'])
+    except:
+        messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
+        return redirect(request.META['HTTP_REFERER'])
 
+
+
+class CartSummary(LoginRequiredMixin, DataMixin, ListView):
+    template_name = 'justsite/index.html'
+    context_object_name = 'items'
+    title_page = "Корзина"
+
+
+    def get_queryset(self):
+        return Items.objects.filter(cart=self.request.user)
 

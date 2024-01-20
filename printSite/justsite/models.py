@@ -27,7 +27,7 @@ class Items(models.Model):
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                        default=Status.DRAFT, verbose_name="Статус")
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='items', verbose_name="Категория")
+    cat = models.ForeignKey('Category', on_delete=models.SET_NULL, related_name='items', verbose_name="Категория", null=True)
     tags = models.ManyToManyField('TagItem', blank=True, related_name='tags', verbose_name="Теги")
 
     published = PublishedModel()
