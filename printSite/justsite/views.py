@@ -14,6 +14,7 @@ from django.db.models import F, Value
 from justsite.models import Items, TagItem
 from justsite.utils import DataMixin
 from users.models import Cart
+from django.db.models import Count, Sum, Avg, Max, Min
 
 
 # Create your views here.
@@ -97,7 +98,7 @@ def to_cart(request, item_id):
     try:
         user = get_user_model().objects.get(pk=request.user.id)
         item = Items.objects.get(pk=item_id)
-        if Cart.objects.filter(user=user).exists():
+        if Cart.objects.filter(user=user, item=item).exists():
             cart = Cart.objects.get(user=user, item=item)
             cart.count += 1
             cart.save()
@@ -112,11 +113,17 @@ def to_cart(request, item_id):
 
 
 class CartSummary(LoginRequiredMixin, DataMixin, ListView):
-    template_name = 'justsite/index.html'
-    context_object_name = 'items'
+    template_name = 'justsite/cart.html'
+    context_object_name = 'cart_items'
     title_page = "Корзина"
 
 
     def get_queryset(self):
-        return Items.objects.filter(cart=self.request.user)
+        q = Cart.objects.filter(user=self.request.user).select_related('item').annotate(total=F('item__price')*F('count'))
+        self.summ = q.aggregate(summ=Sum('total'))['summ']
+        return q
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, summ=self.summ)
 

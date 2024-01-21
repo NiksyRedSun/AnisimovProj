@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+
+
+
+{% for i in cart_items %}
+<div>
+ {% if i.photo %}
+       <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
+ {% endif %}
+<h3>{{ i.item.name }} x {{i.count}} → {{i.total}} р.</h3>
+</div>
+{% endfor %}
+<h2>Итого: {{summ}} р.</h2>
+{% endblock %}
+

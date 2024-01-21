@@ -1,28 +1,25 @@
 {% extends 'base.html' %}
 
 
-{% block breadcrumbs %}
-
-<!-- Теги -->
-{% with item.tags.all as tags %}
-{% if tags %}
-<ul>
-    <li>Теги:</li>
-    {% for t in tags %}
-    <li><a href="{{t.get_absolute_url}}">{{t.tag}}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-{% endblock %}
 
 
 {% block content %}
 <h1>{{item.name}}</h1>
- 
-{% if post.photo %}
-<p ><img class="img-article-left" src="{{post.photo.url}}"></p>
+
+{% with item.tags.all as tags %}
+{% if tags %}
+    <div>Теги продукта:</div>
+    {% for t in tags %}
+    <div><a href="{{t.get_absolute_url}}">{{t.tag}}</a></div>
+    {% endfor %}
 {% endif %}
- 
-{{item.description}}
+{% endwith %}
+
+<div>{{item.description}}</div>
+<div>Цена: {{item.price}} р.</div>
+
+{% if post.photo %}
+<p><img class="img-article-left" src="{{post.photo.url}}"></p>
+{% endif %}
+
 {% endblock %}

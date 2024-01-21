@@ -29,6 +29,7 @@ class Items(models.Model):
                                        default=Status.DRAFT, verbose_name="Статус")
     cat = models.ForeignKey('Category', on_delete=models.SET_NULL, related_name='items', verbose_name="Категория", null=True)
     tags = models.ManyToManyField('TagItem', blank=True, related_name='tags', verbose_name="Теги")
+    price = models.IntegerField(blank=True, verbose_name="Цена", null=True)
 
     published = PublishedModel()
 

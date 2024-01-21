@@ -21,7 +21,8 @@
        <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
  {% endif %}
 <h3>{{ i.name }}</h3>
-<div>{{i.content}}</div>
+<div>{{i.description}}</div>
+<div>Цена: {{i.price}} р.</div>
 <div><a href="{{ i.get_absolute_url }}">Смотреть товар</a></div>
 <div><a href="{% url 'to_cart' i.id %}">Добавить в корзину</a></div>
 </div>
