@@ -16,15 +16,12 @@ class AddCommentForm(forms.ModelForm):
         }
 
 
-    def __init__(self, ):
-
-
     def clean(self):
         cleaned_data = super().clean()
         text = cleaned_data.get("text")
         rating = cleaned_data.get("rating")
+        if not text and rating is None:
+            raise ValidationError("Должен быть хотя бы комментарий или оценка")
 
-        print(text)
-        print(rating)
 
 

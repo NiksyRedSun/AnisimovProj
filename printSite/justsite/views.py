@@ -51,12 +51,13 @@ class ShowItem(DataMixin, DetailView):
     template_name = 'justsite/item.html'
     slug_url_kwarg = 'item_slug'
     context_object_name = 'item'
-    form = AddCommentForm
+    form = AddCommentForm()
 
 
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+        self.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+        return self.item
 
 
 
@@ -66,9 +67,19 @@ class ShowItem(DataMixin, DetailView):
 
 
     def post(self, request, item_slug):
-        # f = AddCommentForm(request.POST, user=request.user, item=item)
-        f.save()
-        return redirect(request.META['HTTP_REFERER'])
+        form = AddCommentForm(request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+            obj.save()
+            messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
+        else:
+            # Говно конечно какое-то получается, но как есть, почему-то форма не отображает ошибки непосредственно в ней
+            messages.add_message(request, messages.SUCCESS, form.non_field_errors())
+
+        return redirect('item', item_slug=item_slug)
 
 
 

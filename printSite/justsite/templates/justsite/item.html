@@ -28,12 +28,24 @@
 <p><img class="img-article-left" src="{{post.photo.url}}"></p>
 {% endif %}
 <br>
-<div>Оставить комментарий:</div>
-<form method="post">
-    {% csrf_token %}
-    {% for err in form.non_field_errors %}
-    <div>{{ err }}</div>
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
     {% endfor %}
+</div>
+{% endif %}
+
+<div>Оставить комментарий:</div>
+
+
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div>{{ form.errors }}</div>
+
     <div>{{ form.text }}</div>
     <div>{{ form.rating.label }}</div>
     {% for radio in form.rating %}
