@@ -15,6 +15,7 @@ from justsite.models import Items, TagItem
 from justsite.utils import DataMixin
 from users.models import Cart
 from django.db.models import Count, Sum, Avg, Max, Min
+from .forms import AddCommentForm
 
 
 # Create your views here.
@@ -50,10 +51,26 @@ class ShowItem(DataMixin, DetailView):
     template_name = 'justsite/item.html'
     slug_url_kwarg = 'item_slug'
     context_object_name = 'item'
+    form = AddCommentForm
+
 
 
     def get_object(self, queryset=None):
         return get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, form=self.form)
+
+
+    def post(self, request, item_slug):
+        # f = AddCommentForm(request.POST, user=request.user, item=item)
+        f.save()
+        return redirect(request.META['HTTP_REFERER'])
+
+
 
 
 
@@ -96,19 +113,20 @@ class ItemsTags(DataMixin, ListView):
 @login_required
 def to_cart(request, item_id):
     try:
-        user = get_user_model().objects.get(pk=request.user.id)
-        item = Items.objects.get(pk=item_id)
-        if Cart.objects.filter(user=user, item=item).exists():
-            cart = Cart.objects.get(user=user, item=item)
+        if Cart.objects.filter(user=request.user, item__pk=item_id).exists():
+            cart = Cart.objects.get(user=request.user, item__pk=item_id)
             cart.count += 1
             cart.save()
         else:
-            user.cart.add(item)
+            item = Items.objects.get(pk=item_id)
+            request.user.cart.add(item)
         messages.add_message(request, messages.SUCCESS, 'Товар успешно добавлен в корзину')
         return redirect(request.META['HTTP_REFERER'])
     except:
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
+
         return redirect(request.META['HTTP_REFERER'])
+
 
 
 
@@ -120,7 +138,10 @@ class CartSummary(LoginRequiredMixin, DataMixin, ListView):
 
     def get_queryset(self):
         q = Cart.objects.filter(user=self.request.user).select_related('item').annotate(total=F('item__price')*F('count'))
-        self.summ = q.aggregate(summ=Sum('total'))['summ']
+
+        # в данном случае расчет данных на стороне сервера приводит к уменьшению запросов на 1, второй случай - через запрос к БД
+        self.summ = sum(map(lambda x: x.total, q))
+        # self.summ = q.aggregate(summ=Sum('total'))['summ']
         return q
 
     def get_context_data(self, *, object_list=None, **kwargs):

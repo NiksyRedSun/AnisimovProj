@@ -14,6 +14,7 @@
        <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
  {% endif %}
 <h3>{{ i.item.name }} x {{i.count}} → {{i.total}} р.</h3>
+    <div><a href="{{ i.item.get_absolute_url }}">Смотреть товар</a></div>
 </div>
 {% endfor %}
 <h2>Итого: {{summ}} р.</h2>

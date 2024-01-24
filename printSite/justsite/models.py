@@ -6,6 +6,8 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 
+
+
 class PublishedModel(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_published=Items.Status.PUBLISHED)
@@ -28,8 +30,9 @@ class Items(models.Model):
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                        default=Status.DRAFT, verbose_name="Статус")
     cat = models.ForeignKey('Category', on_delete=models.SET_NULL, related_name='items', verbose_name="Категория", null=True)
-    tags = models.ManyToManyField('TagItem', blank=True, related_name='tags', verbose_name="Теги")
+    tags = models.ManyToManyField('TagItem', blank=True, related_name='items', verbose_name="Теги")
     price = models.IntegerField(blank=True, verbose_name="Цена", null=True)
+    rate = models.FloatField(blank=True, verbose_name="Рейтинг", null=True)
 
     published = PublishedModel()
 
@@ -55,6 +58,22 @@ class Items(models.Model):
 
 
 
+
+class Comments(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments', db_constraint=False)
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='comments', db_constraint=False)
+    text = models.TextField(blank=True, verbose_name="Текст комментария", null=True)
+    rating = models.IntegerField(blank=True, verbose_name="Оценка:", null=True)
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+
+
+    class Meta:
+        ordering = ['-time_create']
+        indexes = [
+            models.Index(fields=['-time_create']),
+        ]
+        verbose_name = "Комментарий"
+        verbose_name_plural = 'Комментарии'
 
 
 

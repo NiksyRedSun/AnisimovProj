@@ -19,4 +19,4 @@ def show_categories(cat_selected_id=0):
 
 @register.inclusion_tag('justsite/list_tags.html')
 def show_all_tags():
-    return {"tags": TagItem.objects.annotate(total=Count("tags")).filter(total__gt=0)}
+    return {"tags": TagItem.objects.annotate(total=Count("items")).filter(total__gt=0)}
