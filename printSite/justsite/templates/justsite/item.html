@@ -44,7 +44,13 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div>{{ form.errors }}</div>
+    {% if form.non_field_errors %}
+    <div class="non-field-errors">
+    {% for err in form.non_field_errors %}
+        <p>{{ err }}</p>
+    {% endfor %}
+    </div>
+    {% endif %}
 
     <div>{{ form.text }}</div>
     <div>{{ form.rating.label }}</div>
@@ -56,6 +62,18 @@
 
     <input type="submit" value="Оставить комментарий">
 </form>
-
+<br>
+<div>
+    {% for comment in comments %}
+    <div>Пользователь: {{comment.user}}</div>
+    {% if comment.rating is not None %}
+    <div>Оценка: {{comment.rating}}</div>
+    {% else %}
+    <div>Без оценки</div>
+    {% endif %}
+    <div>Комментарий: {{comment.text}}</div>
+    <br>
+    {% endfor %}
+</div>
 
 {% endblock %}

@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 from django.db.models import F, Value
-from justsite.models import Items, TagItem
+from justsite.models import Items, TagItem, Comments
 from justsite.utils import DataMixin
 from users.models import Cart
 from django.db.models import Count, Sum, Avg, Max, Min
@@ -46,42 +46,72 @@ class Contact(LoginRequiredMixin, DataMixin, TemplateView):
 
 
 
-class ShowItem(DataMixin, DetailView):
-    model = Items
+# class ShowItem(DataMixin, DetailView):
+#     model = Items
+#     template_name = 'justsite/item.html'
+#     slug_url_kwarg = 'item_slug'
+#     context_object_name = 'item'
+#     form = AddCommentForm()
+#
+#
+#
+#     def get_object(self, queryset=None):
+#         self.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+#         return self.item
+#
+#
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return self.get_mixin_context(context, form=self.form)
+#
+#
+#
+#     def post(self, request, item_slug):
+#         form = AddCommentForm(request.POST)
+#
+#         if form.is_valid():
+#             obj = form.save(commit=False)
+#             obj.user = request.user
+#             obj.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+#             obj.save()
+#             messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
+#             return redirect('item', item_slug=item_slug)
+#
+#         context = self.get_context_data()
+#         context['form'] = form
+#         return render(self.template_name, context)
+
+
+class ShowItem(DataMixin, TemplateView):
     template_name = 'justsite/item.html'
-    slug_url_kwarg = 'item_slug'
-    context_object_name = 'item'
-    form = AddCommentForm()
-
-
-
-    def get_object(self, queryset=None):
-        self.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
-        return self.item
-
 
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, form=self.form)
+        context['title'] = "Обзор"
+        context['item'] = get_object_or_404(Items.published, slug=self.kwargs['item_slug'])
+        context['form'] = AddCommentForm()
+        context['comments'] = Comments.objects.filter(item=context['item'])
+
+        return self.get_mixin_context(context)
 
 
     def post(self, request, item_slug):
         form = AddCommentForm(request.POST)
+        item = get_object_or_404(Items.published, slug=item_slug)
 
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
-            obj.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
+            obj.item = item
             obj.save()
             messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
-        else:
-            # Говно конечно какое-то получается, но как есть, почему-то форма не отображает ошибки непосредственно в ней
-            messages.add_message(request, messages.SUCCESS, form.non_field_errors())
+            return redirect('item', item_slug=item_slug)
 
-        return redirect('item', item_slug=item_slug)
-
-
+        context = self.get_context_data()
+        context['form'] = form
+        return render(request, 'justsite/item.html', context)
 
 
 

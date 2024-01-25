@@ -17,8 +17,6 @@ class DataMixin:
             self.extra_context['cat_selected'] = self.cat_selected
 
 
-
-
     def get_mixin_context(self, context, **kwargs):
         context.update(kwargs)
         return context
