@@ -92,7 +92,9 @@ class ShowItem(DataMixin, TemplateView):
         context['title'] = "Обзор"
         context['item'] = get_object_or_404(Items.published, slug=self.kwargs['item_slug'])
         context['form'] = AddCommentForm()
-        context['comments'] = Comments.objects.filter(item=context['item'])
+        context['comments'] = Comments.objects.filter(item=context['item']).select_related('user')
+        if self.request.user.is_authenticated:
+            context['user_comment'] = context['comments'].filter(user=self.request.user).exists()
 
         return self.get_mixin_context(context)
 
@@ -106,6 +108,12 @@ class ShowItem(DataMixin, TemplateView):
             obj.user = request.user
             obj.item = item
             obj.save()
+
+            if obj.rating is not None:
+                rating = Comments.objects.filter(item=item).aggregate(Avg('rating'))
+                item.rate=rating['rating__avg']
+                item.save()
+
             messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
             return redirect('item', item_slug=item_slug)
 

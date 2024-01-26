@@ -17,7 +17,6 @@
 
 <div>{{item.description}}</div>
 <div>Цена: {{item.price}} р.</div>
-<br>
 {% if item.rate %}
 <div>Рейтинг: {{item.rate}}</div>
 {% else %}
@@ -37,13 +36,12 @@
 </div>
 {% endif %}
 
+
+{% if user.is_authenticated %}
+{% if not user_comment %}
 <div>Оставить комментарий:</div>
-
-
-
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-
     {% if form.non_field_errors %}
     <div class="non-field-errors">
     {% for err in form.non_field_errors %}
@@ -62,7 +60,13 @@
 
     <input type="submit" value="Оставить комментарий">
 </form>
-<br>
+{% endif %}
+{% else %}
+<div>Чтобы оставить комментарий - <a href="{% url 'users:login' %}">авторизуйтесь</a></div>
+{% endif %}
+
+
+
 <div>
     {% for comment in comments %}
     <div>Пользователь: {{comment.user}}</div>
