@@ -22,6 +22,7 @@
 {% else %}
 <div>Рейтинг: Еще никто не оценил</div>
 {% endif %}
+<div><a href="{% url 'to_cart' item.slug %}">Добавить в корзину</a></div>
 
 {% if post.photo %}
 <p><img class="img-article-left" src="{{post.photo.url}}"></p>
