@@ -76,6 +76,39 @@ class Comments(models.Model):
         verbose_name_plural = 'Комментарии'
 
 
+class Order(models.Model):
+
+    class Status(models.IntegerChoices):
+        ONTHEJOB = 0, 'В работе'
+        READYTOGO = 1, 'Готов к выдаче'
+        FINISHED = 2, 'Выдан'
+
+
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='order_user')
+    item = models.ManyToManyField(Items, related_name='order_item')
+
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    status = models.IntegerField(choices=Status.choices, default=Status.ONTHEJOB)
+    order_sum = models.IntegerField(blank=True, verbose_name="Стоимость заказа", null=True)
+
+
+
+    class Meta:
+        ordering = ['time_create']
+        indexes = [
+            models.Index(fields=['time_create']),
+        ]
+        verbose_name = "Заказ"
+        verbose_name_plural = 'Заказы'
+
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orders')
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='items')
+    count = models.IntegerField(blank=True, verbose_name="Количество товара", null=True)
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Категория")

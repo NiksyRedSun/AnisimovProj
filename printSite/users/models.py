@@ -12,8 +12,8 @@ class User(AbstractUser):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', db_constraint=False)
-    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='item', db_constraint=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_users', db_constraint=False)
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='cart_items', db_constraint=False)
 
 
 

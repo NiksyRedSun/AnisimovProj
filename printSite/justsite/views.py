@@ -46,43 +46,6 @@ class Contact(LoginRequiredMixin, DataMixin, TemplateView):
 
 
 
-# class ShowItem(DataMixin, DetailView):
-#     model = Items
-#     template_name = 'justsite/item.html'
-#     slug_url_kwarg = 'item_slug'
-#     context_object_name = 'item'
-#     form = AddCommentForm()
-#
-#
-#
-#     def get_object(self, queryset=None):
-#         self.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
-#         return self.item
-#
-#
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return self.get_mixin_context(context, form=self.form)
-#
-#
-#
-#     def post(self, request, item_slug):
-#         form = AddCommentForm(request.POST)
-#
-#         if form.is_valid():
-#             obj = form.save(commit=False)
-#             obj.user = request.user
-#             obj.item = get_object_or_404(Items.published, slug=self.kwargs[self.slug_url_kwarg])
-#             obj.save()
-#             messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
-#             return redirect('item', item_slug=item_slug)
-#
-#         context = self.get_context_data()
-#         context['form'] = form
-#         return render(self.template_name, context)
-
-
 class ShowItem(DataMixin, TemplateView):
     template_name = 'justsite/item.html'
 
@@ -160,14 +123,15 @@ class ItemsTags(DataMixin, ListView):
 
 
 @login_required
-def to_cart(request, item_id):
+def to_cart(request, item_slug):
     try:
-        item = Items.objects.get(pk=item_id)
+        item = Items.objects.get(slug=item_slug)
         c = Cart(user=request.user, item=item)
         c.save()
         messages.add_message(request, messages.SUCCESS, 'Товар успешно добавлен в корзину')
         return redirect(request.META['HTTP_REFERER'])
-    except:
+    except Exception as e:
+        print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
 
         return redirect(request.META['HTTP_REFERER'])
@@ -175,17 +139,32 @@ def to_cart(request, item_id):
 
 
 @login_required
-def delete_from_cart(request, item_id):
+def delete_from_cart(request, item_slug):
     try:
-        item = Cart.objects.filter(user=request.user, item__pk=item_id)[0]
+        item = Cart.objects.filter(user=request.user, item__slug=item_slug)[0]
         item.delete()
-        messages.add_message(request, messages.SUCCESS, 'Товар удален')
+        messages.add_message(request, messages.SUCCESS, 'Товар успешно удален')
         return redirect(request.META['HTTP_REFERER'])
     except Exception as e:
         print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
 
         return redirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def create_order(request):
+    try:
+        item = Cart.objects.filter(user=request.user, item__pk=item_id)[0]
+        item.delete()
+        messages.add_message(request, messages.SUCCESS, 'Товар успешно удален')
+        return redirect(request.META['HTTP_REFERER'])
+    except Exception as e:
+        print(e)
+        messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
+
+        return redirect(request.META['HTTP_REFERER'])
+
 
 
 
@@ -197,13 +176,8 @@ class CartSummary(LoginRequiredMixin, DataMixin, ListView):
 
 
     def get_queryset(self):
-        q = Cart.objects.filter(user=self.request.user).select_related('items').values('item_id', 'item__price', 'item__name').annotate(Count('item_id'))
-        for x in q:
-            x.update({'total': x['item_id__count']*x['item__price']})
-
-        # в данном случае расчет данных на стороне сервера приводит к уменьшению запросов на 1, второй случай - через запрос к БД
+        q = self.request.user.cart.all().annotate(count=Count('id'), total=F('price')*F('count')).values('name', 'count', 'total', 'slug')
         self.summ = sum(map(lambda x: x['total'], q))
-        # self.summ = q.aggregate(summ=Sum('total'))['summ']
         return q
 
     def get_context_data(self, *, object_list=None, **kwargs):

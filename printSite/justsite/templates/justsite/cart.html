@@ -20,11 +20,12 @@
  {% if i.photo %}
        <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
  {% endif %}
-<h3>{{ i.item__name }} x {{i.item_id__count}} → {{i.total}} р.</h3>
-    <div><a href="{{ i.item.get_absolute_url }}">Смотреть товар</a></div>
-    <div><a href="{% url 'delete_from_cart' i.item_id %}">Удалить товар из корзины</a></div>
+<h3>{{ i.name }} x {{i.count}} → {{i.total}} р.</h3>
+    <div><a href="{% url 'item' i.slug %}">Смотреть товар</a></div>
+    <div><a href="{% url 'delete_from_cart' i.slug %}">Удалить товар из корзины</a></div>
 </div>
 {% endfor %}
 <h2>Итого: {{summ}} р.</h2>
+<div><a href="{% url 'create_order' %}">Сформировать заказ</a></div>
 {% endblock %}
 
