@@ -6,6 +6,13 @@
 <h1>{{ title }}</h1>
 
 
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 
 
 {% for i in cart_items %}
@@ -13,8 +20,9 @@
  {% if i.photo %}
        <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
  {% endif %}
-<h3>{{ i.item.name }} x {{i.count}} → {{i.total}} р.</h3>
+<h3>{{ i.item__name }} x {{i.item_id__count}} → {{i.total}} р.</h3>
     <div><a href="{{ i.item.get_absolute_url }}">Смотреть товар</a></div>
+    <div><a href="{% url 'delete_from_cart' i.item_id %}">Удалить товар из корзины</a></div>
 </div>
 {% endfor %}
 <h2>Итого: {{summ}} р.</h2>

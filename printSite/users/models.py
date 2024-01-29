@@ -14,6 +14,6 @@ class User(AbstractUser):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', db_constraint=False)
     item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='item', db_constraint=False)
-    count = models.IntegerField(default=1)
+
 
 

@@ -162,16 +162,27 @@ class ItemsTags(DataMixin, ListView):
 @login_required
 def to_cart(request, item_id):
     try:
-        if Cart.objects.filter(user=request.user, item__pk=item_id).exists():
-            cart = Cart.objects.get(user=request.user, item__pk=item_id)
-            cart.count += 1
-            cart.save()
-        else:
-            item = Items.objects.get(pk=item_id)
-            request.user.cart.add(item)
+        item = Items.objects.get(pk=item_id)
+        c = Cart(user=request.user, item=item)
+        c.save()
         messages.add_message(request, messages.SUCCESS, 'Товар успешно добавлен в корзину')
         return redirect(request.META['HTTP_REFERER'])
     except:
+        messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
+
+        return redirect(request.META['HTTP_REFERER'])
+
+
+
+@login_required
+def delete_from_cart(request, item_id):
+    try:
+        item = Cart.objects.filter(user=request.user, item__pk=item_id)[0]
+        item.delete()
+        messages.add_message(request, messages.SUCCESS, 'Товар удален')
+        return redirect(request.META['HTTP_REFERER'])
+    except Exception as e:
+        print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
 
         return redirect(request.META['HTTP_REFERER'])
@@ -186,10 +197,12 @@ class CartSummary(LoginRequiredMixin, DataMixin, ListView):
 
 
     def get_queryset(self):
-        q = Cart.objects.filter(user=self.request.user).select_related('item').annotate(total=F('item__price')*F('count'))
+        q = Cart.objects.filter(user=self.request.user).select_related('items').values('item_id', 'item__price', 'item__name').annotate(Count('item_id'))
+        for x in q:
+            x.update({'total': x['item_id__count']*x['item__price']})
 
         # в данном случае расчет данных на стороне сервера приводит к уменьшению запросов на 1, второй случай - через запрос к БД
-        self.summ = sum(map(lambda x: x.total, q))
+        self.summ = sum(map(lambda x: x['total'], q))
         # self.summ = q.aggregate(summ=Sum('total'))['summ']
         return q
 
