@@ -8,8 +8,10 @@ from justsite.models import Category, TagItem
 register = template.Library()
 
 @register.filter
-def lookup(d, key):
-    return d[key]
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
 
 @register.inclusion_tag('justsite/list_categories.html')
 def show_categories(cat_selected_id=0):

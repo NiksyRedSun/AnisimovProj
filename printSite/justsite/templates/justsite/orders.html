@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
+{% load pstags %}
 
 {% block content %}
 
 <h1>{{ title }}</h1>
-
+<br>
 
 {% if messages %}
 <div>
@@ -17,18 +18,19 @@
 
 {% for order in orders %}
 <div>
-    <div>Заказ №{{order.id}} от {{order.time_create}}</div>
-    <h3>Содержимое:</h3>
-    {% for item in orders_items.order %}
-     {% if item.photo %}
+    <h2>Заказ №{{order.id}} от {{order.time_create}}</h2>
+    <h4>Содержимое:</h4>
+    {% for item in orders_items|get_item:order %}
+    {% if item.photo %}
        <p><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
     {% endif %}
-    <h3>{{ item.item__name }} x {{item.count}} → {{item.total}} р.</h3>
+    <p>{{ item.item__name }} x {{item.count}} → {{item.total}} р.</p>
 
     {% endfor %}
 </div>
-<h2>Итого: {{order.order_sum}} р.</h2>
-<h2>Статус: {{order.status}}</h2>
+<h3>Итого: {{order.order_sum}} р.</h3>
+<h3>Статус: {{order.get_status_display}}</h3>
+<br>
 {% endfor %}
 
 

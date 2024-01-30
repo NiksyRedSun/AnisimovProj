@@ -184,9 +184,8 @@ class Orders(LoginRequiredMixin, DataMixin, ListView):
         self.orders_items = {}
         for order in self.orders:
             res = OrderItem.objects.filter(order=order).annotate(total=F('item__price')*F('count')).values('item__name', 'count', 'total')
-            for r in res:
-                print(r)
-            self.orders_items[order] = res
+            self.orders_items[order] = list(res)
+            print(order.__dict__)
 
         return self.orders
 
