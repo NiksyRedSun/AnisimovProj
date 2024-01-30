@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+{% for order in orders %}
+<div>
+    <div>Заказ №{{order.id}} от {{order.time_create}}</div>
+    <h3>Содержимое:</h3>
+    {% for item in orders_items.order %}
+     {% if item.photo %}
+       <p><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
+    {% endif %}
+    <h3>{{ item.item__name }} x {{item.count}} → {{item.total}} р.</h3>
+
+    {% endfor %}
+</div>
+<h2>Итого: {{order.order_sum}} р.</h2>
+<h2>Статус: {{order.status}}</h2>
+{% endfor %}
+
+
+{% endblock %}
+
+
+
+
+<h2>Итого: {{summ}} р.</h2>
+<div><a href="{% url 'create_order' %}">Сформировать заказ</a></div>
+
+
+<h3>{{ i.name }} x {{i.count}} → {{i.total}} р.</h3>
+    <div><a href="{% url 'item' i.slug %}">Смотреть товар</a></div>
+    <div><a href="{% url 'delete_from_cart' i.slug %}">Удалить товар из корзины</a></div>

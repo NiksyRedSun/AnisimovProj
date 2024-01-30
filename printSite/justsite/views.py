@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 from django.db.models import F, Value
-from justsite.models import Items, TagItem, Comments
+from justsite.models import Items, TagItem, Comments, Order, OrderItem
 from justsite.utils import DataMixin
 from users.models import Cart
 from django.db.models import Count, Sum, Avg, Max, Min
@@ -155,16 +155,45 @@ def delete_from_cart(request, item_slug):
 @login_required
 def create_order(request):
     try:
-        item = Cart.objects.filter(user=request.user, item__pk=item_id)[0]
-        item.delete()
-        messages.add_message(request, messages.SUCCESS, 'Товар успешно удален')
+        q = request.user.cart.all().annotate(count=Count('id'), total=F('price')*F('count'))
+        summ = sum(map(lambda x: x.total, q))
+        order = Order(user=request.user, order_sum=summ)
+        order.save()
+        for i in q:
+            OrderItem(order=order, item=i, count=i.count).save()
+        Cart.objects.filter(user=request.user).delete()
+
+        messages.add_message(request, messages.WARNING, 'Ваш заказ успешно сформирован')
         return redirect(request.META['HTTP_REFERER'])
+
     except Exception as e:
         print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
 
         return redirect(request.META['HTTP_REFERER'])
 
+
+class Orders(LoginRequiredMixin, DataMixin, ListView):
+    template_name = 'justsite/orders.html'
+    context_object_name = 'orders'
+    title_page = "Заказы"
+
+
+    def get_queryset(self):
+        self.orders = self.request.user.user_orders.all()
+        self.orders_items = {}
+        for order in self.orders:
+            res = OrderItem.objects.filter(order=order).annotate(total=F('item__price')*F('count')).values('item__name', 'count', 'total')
+            for r in res:
+                print(r)
+            self.orders_items[order] = res
+
+        return self.orders
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, orders_items=self.orders_items)
 
 
 
