@@ -7,10 +7,15 @@ from justsite.models import Category, TagItem
 
 register = template.Library()
 
+
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+
+@register.filter
+def one_digit_after_dot(num, num_dig=1):
+    return format(num, f'.{num_dig}f')
 
 
 @register.inclusion_tag('justsite/list_categories.html')

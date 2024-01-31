@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 
-
+{% load pstags %}
 
 {% block content %}
 <h1>{{item.name}}</h1>
@@ -15,19 +15,6 @@
 {% endif %}
 {% endwith %}
 
-<div>{{item.description}}</div>
-<div>Цена: {{item.price}} р.</div>
-{% if item.rate %}
-<div>Рейтинг: {{item.rate}}</div>
-{% else %}
-<div>Рейтинг: Еще никто не оценил</div>
-{% endif %}
-<div><a href="{% url 'to_cart' item.slug %}">Добавить в корзину</a></div>
-
-{% if post.photo %}
-<p><img class="img-article-left" src="{{post.photo.url}}"></p>
-{% endif %}
-<br>
 
 {% if messages %}
 <div>
@@ -36,6 +23,22 @@
     {% endfor %}
 </div>
 {% endif %}
+
+<div>{{item.description}}</div>
+<div>Цена: {{item.price}} р.</div>
+{% if item.rate %}
+<div>Рейтинг: {{ item.rate|one_digit_after_dot }}</div>
+{% else %}
+<div>Рейтинг: Еще никто не оценил</div>
+{% endif %}
+<div><a href="{% url 'to_cart' item.slug %}">Добавить в корзину</a></div>
+
+
+{% if post.photo %}
+<p><img class="img-article-left" src="{{post.photo.url}}"></p>
+{% endif %}
+<br>
+
 
 
 {% if user.is_authenticated %}

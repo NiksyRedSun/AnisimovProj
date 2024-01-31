@@ -16,6 +16,7 @@ from justsite.utils import DataMixin
 from users.models import Cart
 from django.db.models import Count, Sum, Avg, Max, Min
 from .forms import AddCommentForm
+from decimal import Decimal
 
 
 # Create your views here.
@@ -157,6 +158,10 @@ def create_order(request):
     try:
         q = request.user.cart.all().annotate(count=Count('id'), total=F('price')*F('count'))
         summ = sum(map(lambda x: x.total, q))
+        if summ <= 0:
+            messages.add_message(request, messages.WARNING, 'Ваш заказ пустой')
+            return redirect(request.META['HTTP_REFERER'])
+
         order = Order(user=request.user, order_sum=summ)
         order.save()
         for i in q:
@@ -164,6 +169,21 @@ def create_order(request):
         Cart.objects.filter(user=request.user).delete()
 
         messages.add_message(request, messages.WARNING, 'Ваш заказ успешно сформирован')
+        return redirect(request.META['HTTP_REFERER'])
+
+    except Exception as e:
+        print(e)
+        messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
+
+        return redirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def delete_order(request, order_id):
+    try:
+        order = Order.objects.get(pk=order_id)
+        order.delete()
+        messages.add_message(request, messages.SUCCESS, 'Заказ успешно отменен')
         return redirect(request.META['HTTP_REFERER'])
 
     except Exception as e:

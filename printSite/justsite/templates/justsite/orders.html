@@ -5,6 +5,7 @@
 {% block content %}
 
 <h1>{{ title }}</h1>
+<h2>Представители сайта свяжутся с вами в ближайшее время, чтобы обсудить заказ, если еще этого не сделали</h2>
 <br>
 
 {% if messages %}
@@ -30,6 +31,7 @@
 </div>
 <h3>Итого: {{order.order_sum}} р.</h3>
 <h3>Статус: {{order.get_status_display}}</h3>
+<div><a href="{% url 'delete_order' order.id %}">Отменить заказ</a></div>
 <br>
 {% endfor %}
 

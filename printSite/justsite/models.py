@@ -94,9 +94,9 @@ class Order(models.Model):
 
 
     class Meta:
-        ordering = ['time_create']
+        ordering = ['-time_create']
         indexes = [
-            models.Index(fields=['time_create']),
+            models.Index(fields=['-time_create']),
         ]
         verbose_name = "Заказ"
         verbose_name_plural = 'Заказы'

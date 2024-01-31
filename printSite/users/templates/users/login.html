@@ -2,7 +2,15 @@
  
 {% block content %}
 <h1>{{ title }}</h1>
- 
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}" />
