@@ -193,6 +193,8 @@ def delete_order(request, order_id):
         return redirect(request.META['HTTP_REFERER'])
 
 
+
+
 class Orders(LoginRequiredMixin, DataMixin, ListView):
     template_name = 'justsite/orders.html'
     context_object_name = 'orders'
@@ -215,6 +217,12 @@ class Orders(LoginRequiredMixin, DataMixin, ListView):
         return self.get_mixin_context(context, orders_items=self.orders_items)
 
 
+    def handle_no_permission(self):
+        messages.error(self.request, "Чтобы просмотреть свои заказы - авторизуйтесь")
+        return redirect('users:login')
+
+
+
 
 
 class CartSummary(LoginRequiredMixin, DataMixin, ListView):
@@ -231,4 +239,10 @@ class CartSummary(LoginRequiredMixin, DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         return self.get_mixin_context(context, summ=self.summ)
+
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Чтобы просмотреть свою корзину - авторизуйтесь")
+        return redirect('users:login')
+
 

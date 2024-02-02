@@ -15,6 +15,15 @@ class LoginUser(LoginView):
     template_name = 'users/login.html'
     extra_context = {'title': "Авторизация"}
 
+
+
+    def get_context_data(self, **kwargs):
+        # print(self.request.META['HTTP_REFERER'])
+        # print(self.request.META.HTTP_REFERER)
+        # # print(self.request.META)
+        context = super().get_context_data(**kwargs)
+        return context
+
     # def get_success_url(self):
     #     return reverse_lazy('home')
 

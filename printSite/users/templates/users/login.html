@@ -11,6 +11,10 @@
 </div>
 {% endif %}
 
+{% if exception and debug %}
+    <h3 class="font-bold">{{ exception }}</h3>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="next" value="{{ next }}" />
