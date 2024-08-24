@@ -11,6 +11,7 @@ class ItemsAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_published', 'time_create', 'price', 'rate')
     ordering = ['-time_create', 'name']
     actions = ['set_published', 'set_draft']
+    list_editable = ('is_published',)
 
 
     @admin.action(description="Добавить товары на витрину")
@@ -38,6 +39,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('user', 'time_create', 'status', 'order_sum')
     list_display_links = ('time_create', )
     readonly_fields = ['user', 'time_create', 'order_sum']
+    list_editable = ('status',)
 
     actions = ['set_on_the_job', 'set_ready_to_go', 'set_finished']
 
