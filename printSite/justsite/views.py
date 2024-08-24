@@ -75,7 +75,7 @@ class ShowItem(DataMixin, TemplateView):
 
             if obj.rating is not None:
                 rating = Comments.objects.filter(item=item).aggregate(Avg('rating'))
-                item.rate=rating['rating__avg']
+                item.rate = rating['rating__avg']
                 item.save()
 
             messages.add_message(request, messages.SUCCESS, 'Ваш комментарий сохранен')
@@ -131,6 +131,7 @@ def to_cart(request, item_slug):
         c.save()
         messages.add_message(request, messages.SUCCESS, 'Товар успешно добавлен в корзину')
         return redirect(request.META['HTTP_REFERER'])
+    
     except Exception as e:
         print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')
@@ -146,6 +147,7 @@ def delete_from_cart(request, item_slug):
         item.delete()
         messages.add_message(request, messages.SUCCESS, 'Товар успешно удален')
         return redirect(request.META['HTTP_REFERER'])
+
     except Exception as e:
         print(e)
         messages.add_message(request, messages.WARNING, 'Что-то пошло не так')

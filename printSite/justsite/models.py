@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
-from django.db.models import F, Value
-from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 
@@ -34,9 +32,8 @@ class Items(models.Model):
     price = models.IntegerField(blank=True, verbose_name="Цена", null=True)
     rate = models.FloatField(blank=True, verbose_name="Рейтинг", null=True)
 
-    published = PublishedModel()
-
     objects = models.Manager()
+    published = PublishedModel()
 
 
     def __str__(self):
@@ -60,10 +57,12 @@ class Items(models.Model):
 
 
 class Comments(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments', db_constraint=False)
-    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='comments', db_constraint=False)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments', db_constraint=False
+                             , verbose_name="Пользователь")
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='comments', db_constraint=False,
+                             verbose_name="Название товара")
     text = models.TextField(blank=True, verbose_name="Текст комментария", null=True)
-    rating = models.IntegerField(blank=True, verbose_name="Оценка:", null=True)
+    rating = models.IntegerField(blank=True, verbose_name="Оценка", null=True)
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
 
@@ -75,6 +74,9 @@ class Comments(models.Model):
         verbose_name = "Комментарий"
         verbose_name_plural = 'Комментарии'
 
+    def __str__(self):
+        return self.text
+
 
 class Order(models.Model):
 
@@ -84,12 +86,13 @@ class Order(models.Model):
         FINISHED = 2, 'Выдан'
 
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_orders')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_orders',
+                             verbose_name="Пользователь")
     item = models.ManyToManyField(Items, related_name='order_item')
 
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
-    status = models.IntegerField(choices=Status.choices, default=Status.ONTHEJOB)
-    order_sum = models.IntegerField(blank=True, verbose_name="Стоимость заказа", null=True)
+    status = models.IntegerField(choices=Status.choices, default=Status.ONTHEJOB, verbose_name="Статус")
+    order_sum = models.IntegerField(blank=True, verbose_name="Сумма заказа", null=True)
 
 
 
@@ -101,18 +104,28 @@ class Order(models.Model):
         verbose_name = "Заказ"
         verbose_name_plural = 'Заказы'
 
+    def __str__(self):
+        return f"Заказ by {self.user} от {self.time_create}"
+
 
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orders')
-    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='items')
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='items', verbose_name="Наименование товара",)
     count = models.IntegerField(blank=True, verbose_name="Количество товара", null=True)
+
+    def __str__(self):
+        return self.item.name
+
+    class Meta:
+        verbose_name = "Товар"
+        verbose_name_plural = 'Товары'
 
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Категория")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="Слаг")
 
     def __str__(self):
         return self.name
@@ -130,8 +143,8 @@ class Category(models.Model):
 
 
 class TagItem(models.Model):
-    tag = models.CharField(max_length=100, db_index=True)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    tag = models.CharField(max_length=100, db_index=True, verbose_name="Тег")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="Слаг")
 
     def __str__(self):
         return self.tag
