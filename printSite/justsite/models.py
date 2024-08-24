@@ -41,9 +41,9 @@ class Items(models.Model):
 
 
     class Meta:
-        ordering = ['-time_create']
+        ordering = ['name']
         indexes = [
-            models.Index(fields=['-time_create']),
+            models.Index(fields=['name']),
         ]
         verbose_name = "Товары магазина"
         verbose_name_plural = 'Товары магазина'

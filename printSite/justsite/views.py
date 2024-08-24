@@ -30,10 +30,11 @@ class PrintSiteHome(DataMixin, ListView):
     cat_selected = 0
     tag_selected = 0
 
-
-
     def get_queryset(self):
-        return Items.published.all().select_related('cat')
+        queryset = Items.published.all().select_related('cat')
+        sort = self.request.GET.get('sort', 'name')  # Получаем параметр 'sort' из запроса
+        queryset = queryset.order_by(sort)
+        return queryset
 
 
 

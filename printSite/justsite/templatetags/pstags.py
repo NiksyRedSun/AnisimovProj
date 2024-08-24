@@ -15,8 +15,10 @@ def get_item(dictionary, key):
 
 @register.filter
 def one_digit_after_dot(num, num_dig=1):
-    return format(num, f'.{num_dig}f')
-
+    if num:
+        return format(num, f'.{num_dig}f')
+    else:
+        return format(num, f'.{num_dig}f')
 
 @register.inclusion_tag('justsite/list_categories.html')
 def show_categories(cat_selected_id=0):
