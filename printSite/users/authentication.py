@@ -9,7 +9,7 @@ class EmailAuthBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         user_model = get_user_model()
         try:
-            user = user_model.objects.get(email=username)
+            user = user_model.objects.get(email=username.lower())
             if user.check_password(password):
                 return user
             return None
