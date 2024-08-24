@@ -24,7 +24,7 @@ def show_categories(cat_selected_id=0):
     return {"cats": cats, "cat_selected": cat_selected_id}
 
 
-
 @register.inclusion_tag('justsite/list_tags.html')
-def show_all_tags():
-    return {"tags": TagItem.objects.annotate(total=Count("tags")).filter(total__gt=0)}
+def show_all_tags(tag_selected_id=0):
+    tags = TagItem.objects.annotate(total=Count("tags")).filter(total__gt=0)
+    return {"tags": tags, "tag_selected": tag_selected_id}

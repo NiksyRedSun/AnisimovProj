@@ -4,6 +4,11 @@
 {% if tags %}
     Теги:
         {% for t in tags %}
-        <div><a href="{{t.get_absolute_url}}">{{t.tag}}</a></div>
+            {% if t.id == tag_selected %}
+                <div>{{t.tag}}</div>
+            {% else %}
+                <div><a href="{{ t.get_absolute_url }}">{{t.tag}}</a></div>
+            {% endif %}
         {% endfor %}
 {% endif %}
+

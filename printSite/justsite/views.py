@@ -28,6 +28,8 @@ class PrintSiteHome(DataMixin, ListView):
     context_object_name = 'items'
     title_page = "Главная страница"
     cat_selected = 0
+    tag_selected = 0
+
 
 
     def get_queryset(self):
@@ -91,12 +93,10 @@ class ShowItem(DataMixin, TemplateView):
 class ItemCategory(DataMixin, ListView):
     template_name = 'justsite/index.html'
     context_object_name = 'items'
-
     allow_empty = False
 
     def get_queryset(self):
         return Items.published.filter(cat__slug=self.kwargs['cat_slug']).select_related('cat')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,15 +110,13 @@ class ItemsTags(DataMixin, ListView):
     context_object_name = 'items'
     allow_empty = False
 
-
     def get_queryset(self):
         return Items.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         tag = get_object_or_404(TagItem, slug=self.kwargs['tag_slug'])
-        return self.get_mixin_context(context, title="Тег: " + tag.tag)
+        return self.get_mixin_context(context, title="Тег: " + tag.tag, tag_selected=tag.pk)
 
 
 

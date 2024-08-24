@@ -6,7 +6,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.PrintSiteHome.as_view(), name="home"), #127.0.0.1:8000
+    path('', views.PrintSiteHome.as_view(), name="home"),
     path('about', views.AboutSite.as_view(), name="about"),
     path('contact', views.Contact.as_view(), name="contact"),
     path('item/<slug:item_slug>/', views.ShowItem.as_view(), name="item"),

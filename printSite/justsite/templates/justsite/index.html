@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block breadcrumbs %}
+
+<!--<a href="?sort=name">Сортировать по имени</a>-->
+<!--<a href="?sort=-created_at">Сортировать по дате создания (по убыванию)</a>-->
+
+{% endblock %}
 
 {% block content %}
 
@@ -27,5 +33,6 @@
 <div><a href="{% url 'to_cart' i.slug %}">Добавить в корзину</a></div>
 </div>
 {% endfor %}
+
 {% endblock %}
 
