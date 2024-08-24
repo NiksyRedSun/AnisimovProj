@@ -2,16 +2,19 @@ from django.contrib import admin, messages
 
 from justsite.models import Items, TagItem, Category, Comments, Order, OrderItem
 
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-
 
 class ItemsAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_published', 'time_create', 'price', 'rate')
     ordering = ['-time_create', 'name']
     actions = ['set_published', 'set_draft']
     list_editable = ('is_published',)
+    # поиск независимо от регистра
+    search_fields = ('name__icontains', )
+    list_filter = ['cat__name', 'is_published', 'tags']
 
 
     @admin.action(description="Добавить товары на витрину")
@@ -30,6 +33,7 @@ class CommentsAdmin(admin.ModelAdmin):
     list_display = ('user', 'item', 'text', 'time_create')
     list_display_links = ('text', )
     readonly_fields = ['user', 'item', 'text', 'rating']
+    search_fields = ('text__icontains',)
 
 
 

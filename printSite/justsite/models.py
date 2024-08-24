@@ -15,7 +15,7 @@ class Items(models.Model):
 
     class Status(models.IntegerChoices):
         DRAFT = 0, 'Черновик'
-        PUBLISHED = 1, 'Опубликовано'
+        PUBLISHED = 1, 'На витрине'
 
     name = models.CharField(max_length=255, verbose_name="Название товара")
     slug = models.SlugField(max_length=255, db_index=True, unique=True, verbose_name="Слаг", validators=[
