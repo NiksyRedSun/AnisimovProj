@@ -7,6 +7,7 @@ class DataMixin:
     extra_context = {}
     cat_selected = None
     tag_selected = None
+    sort_selected = None
 
 
     def __init__(self):
@@ -18,6 +19,9 @@ class DataMixin:
 
         if self.tag_selected is not None:
             self.extra_context['tag_selected'] = self.tag_selected
+
+        if self.sort_selected is not None:
+            self.extra_context['sort_selected'] = self.sort_selected
 
 
     def get_mixin_context(self, context, **kwargs):

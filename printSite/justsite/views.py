@@ -22,22 +22,6 @@ from decimal import Decimal
 # Create your views here.
 
 
-
-class PrintSiteHome(DataMixin, ListView):
-    template_name = 'justsite/index.html'
-    context_object_name = 'items'
-    title_page = "Главная страница"
-    cat_selected = 0
-    tag_selected = 0
-
-    def get_queryset(self):
-        queryset = Items.published.all().select_related('cat')
-        sort = self.request.GET.get('sort', 'name')  # Получаем параметр 'sort' из запроса
-        queryset = queryset.order_by(sort)
-        return queryset
-
-
-
 class AboutSite(LoginRequiredMixin, DataMixin, TemplateView):
     template_name = 'justsite/index.html'
     title_page = "О сайте"
@@ -47,6 +31,70 @@ class AboutSite(LoginRequiredMixin, DataMixin, TemplateView):
 class Contact(LoginRequiredMixin, DataMixin, TemplateView):
     template_name = 'justsite/index.html'
     title_page = "Связаться с нами"
+
+
+
+class PrintSiteHome(DataMixin, ListView):
+    template_name = 'justsite/index.html'
+    context_object_name = 'items'
+    title_page = "Главная страница"
+    cat_selected = 0
+    tag_selected = 0
+    sort_selected = 'name'
+
+    def get_queryset(self):
+        queryset = Items.published.all().select_related('cat')
+        sort = self.request.GET.get('sort', 'name')  # Получаем параметр 'sort' из запроса
+        self.sort_selected = sort
+        queryset = queryset.order_by(sort)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, sort_selected=self.sort_selected)
+
+
+
+class ItemCategory(DataMixin, ListView):
+    template_name = 'justsite/index.html'
+    context_object_name = 'items'
+    allow_empty = False
+    sort_selected = 'name'
+
+    def get_queryset(self):
+        queryset = Items.published.filter(cat__slug=self.kwargs['cat_slug']).select_related('cat')
+        sort = self.request.GET.get('sort', 'name')  # Получаем параметр 'sort' из запроса
+        queryset = queryset.order_by(sort)
+        self.sort_selected = sort
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cat = context['items'][0].cat
+        return self.get_mixin_context(context, title="Категория - " + cat.name, cat_selected=cat.pk,
+                                      sort_selected=self.sort_selected)
+
+
+
+class ItemsTags(DataMixin, ListView):
+    template_name = 'justsite/index.html'
+    context_object_name = 'items'
+    allow_empty = False
+    sort_selected = 'name'
+
+    def get_queryset(self):
+        queryset = Items.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
+        sort = self.request.GET.get('sort', 'name')  # Получаем параметр 'sort' из запроса
+        queryset = queryset.order_by(sort)
+        self.sort_selected = sort
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = get_object_or_404(TagItem, slug=self.kwargs['tag_slug'])
+        return self.get_mixin_context(context, title="Тег: " + tag.tag, tag_selected=tag.pk,
+                                      sort_selected=self.sort_selected)
+
 
 
 
@@ -87,37 +135,6 @@ class ShowItem(DataMixin, TemplateView):
         context = self.get_context_data()
         context['form'] = form
         return render(request, 'justsite/item.html', context)
-
-
-
-
-class ItemCategory(DataMixin, ListView):
-    template_name = 'justsite/index.html'
-    context_object_name = 'items'
-    allow_empty = False
-
-    def get_queryset(self):
-        return Items.published.filter(cat__slug=self.kwargs['cat_slug']).select_related('cat')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        cat = context['items'][0].cat
-        return self.get_mixin_context(context, title="Категория - " + cat.name, cat_selected=cat.pk)
-
-
-
-class ItemsTags(DataMixin, ListView):
-    template_name = 'justsite/index.html'
-    context_object_name = 'items'
-    allow_empty = False
-
-    def get_queryset(self):
-        return Items.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        tag = get_object_or_404(TagItem, slug=self.kwargs['tag_slug'])
-        return self.get_mixin_context(context, title="Тег: " + tag.tag, tag_selected=tag.pk)
 
 
 
@@ -195,7 +212,6 @@ def delete_order(request, order_id):
 
 
 
-
 class Orders(LoginRequiredMixin, DataMixin, ListView):
     template_name = 'justsite/orders.html'
     context_object_name = 'orders'
@@ -221,7 +237,6 @@ class Orders(LoginRequiredMixin, DataMixin, ListView):
     def handle_no_permission(self):
         messages.error(self.request, "Чтобы просмотреть свои заказы - авторизуйтесь")
         return redirect('users:login')
-
 
 
 

@@ -1,24 +1,21 @@
 {% extends 'base.html' %}
 {% load pstags %}
 
+
 {% block breadcrumbs %}
-<div>Сортировка:</div>
-<a href="?sort=name">Сортировать по алфавиту</a>
-<br>
-<a href="?sort=-time_create">Сортировать по дате создания (по убыванию)</a>
-<br>
-<a href="?sort=time_create">Сортировать по дате создания (по возрастанию)</a>
-<br>
+<div>Категории:</div>
+{% if cat_selected == 0 %}
+<div>Все категории</div>
+{% else %}
+<div><a href="{% url 'home' %}">Все категории</a></div>
+{% endif %}
 
-<a href="?sort=-price">Сортировать по цене (по убыванию)</a>
+{% show_categories cat_selected %}
 <br>
-<a href="?sort=price">Сортировать по цене (по возрастанию)</a>
+{% show_all_tags tag_selected %}
 <br>
+{% show_sorts sort_selected %}
 
-<a href="?sort=-rate">Сортировать по рейтингу (по убыванию)</a>
-<br>
-<a href="?sort=rate">Сортировать по рейтингу (по возрастанию)</a>
-<br>
 {% endblock %}
 
 {% block content %}

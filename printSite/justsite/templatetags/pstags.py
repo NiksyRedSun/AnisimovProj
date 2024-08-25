@@ -20,6 +20,8 @@ def one_digit_after_dot(num, num_dig=1):
     else:
         return format(num, f'.{num_dig}f')
 
+
+
 @register.inclusion_tag('justsite/list_categories.html')
 def show_categories(cat_selected_id=0):
     cats = Category.objects.annotate(total=Count("items")).filter(total__gt=0)
@@ -30,3 +32,8 @@ def show_categories(cat_selected_id=0):
 def show_all_tags(tag_selected_id=0):
     tags = TagItem.objects.annotate(total=Count("tags")).filter(total__gt=0)
     return {"tags": tags, "tag_selected": tag_selected_id}
+
+
+@register.inclusion_tag('justsite/list_sorts.html')
+def show_sorts(sort_slug='name'):
+    return {"sort_slug": sort_slug}
