@@ -37,7 +37,7 @@ class Contact(LoginRequiredMixin, DataMixin, TemplateView):
 class PrintSiteHome(DataMixin, ListView):
     template_name = 'justsite/index.html'
     context_object_name = 'items'
-    title_page = "Главная страница"
+    title_page = "Основной асортимент"
     cat_selected = 0
     tag_selected = 0
     sort_selected = 'name'
@@ -81,6 +81,7 @@ class ItemsTags(DataMixin, ListView):
     context_object_name = 'items'
     allow_empty = False
     sort_selected = 'name'
+    cat_selected = -1
 
     def get_queryset(self):
         queryset = Items.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
@@ -224,7 +225,6 @@ class Orders(LoginRequiredMixin, DataMixin, ListView):
         for order in self.orders:
             res = OrderItem.objects.filter(order=order).annotate(total=F('item__price')*F('count')).values('item__name', 'count', 'total')
             self.orders_items[order] = list(res)
-            print(order.__dict__)
 
         return self.orders
 

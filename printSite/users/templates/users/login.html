@@ -3,6 +3,13 @@
 {% block content %}
 <h1>{{ title }}</h1>
 
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <form method="post">
     {% csrf_token %}
@@ -12,8 +19,7 @@
     <div><label for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</div>
     <div>{{ f.errors }}</div>
     {% endfor %}
-    <p ><button type="submit">Войти</button></p>
-
+    <p><button type="submit">Войти</button></p>
 </form>
  
 {% endblock %}

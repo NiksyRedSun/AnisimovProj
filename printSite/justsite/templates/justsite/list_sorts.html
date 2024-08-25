@@ -1,50 +1,60 @@
 
+<div class="breadcrumbs-section">
+        <span class="breadcrumbs-title">Сортировка:</span>
 
+        <span class="breadcrumbs-item {% if sort_slug == 'name' %}active{% endif %}">
+            {% if sort_slug == 'name' %}
+                По алфавиту
+            {% else %}
+                <a href="?sort=name">По алфавиту</a>
+            {% endif %}
+        </span>
 
+        <span class="breadcrumbs-item {% if sort_slug == '-time_create' %}active{% endif %}">
+            {% if sort_slug == '-time_create' %}
+                По дате создания (по убыванию)
+            {% else %}
+                <a href="?sort=-time_create">По дате создания (по убыванию)</a>
+            {% endif %}
+        </span>
 
-<div>Сортировка:</div>
+        <span class="breadcrumbs-item {% if sort_slug == 'time_create' %}active{% endif %}">
+            {% if sort_slug == 'time_create' %}
+                По дате создания (по возрастанию)
+            {% else %}
+                <a href="?sort=time_create">По дате создания (по возрастанию)</a>
+            {% endif %}
+        </span>
 
-{% if sort_slug == 'name'%}
-<div>По алфавиту</div>
-{% else %}
-<div><a href="?sort=name">По алфавиту</a></div>
-{% endif %}
+        <span class="breadcrumbs-item {% if sort_slug == '-price' %}active{% endif %}">
+            {% if sort_slug == '-price' %}
+                По цене (по убыванию)
+            {% else %}
+                <a href="?sort=-price">По цене (по убыванию)</a>
+            {% endif %}
+        </span>
 
-{% if sort_slug == '-time_create'%}
-<div>По дате создания (по убыванию)</div>
-{% else %}
-<div><a href="?sort=-time_create">По дате создания (по убыванию)</a></div>
-{% endif %}
+        <span class="breadcrumbs-item {% if sort_slug == 'price' %}active{% endif %}">
+            {% if sort_slug == 'price' %}
+                По цене (по возрастанию)
+            {% else %}
+                <a href="?sort=price">По цене (по возрастанию)</a>
+            {% endif %}
+        </span>
 
-{% if sort_slug == 'time_create'%}
-<div>По дате создания (по возрастанию)</div>
-{% else %}
-<div><a href="?sort=time_create">По дате создания (по возрастанию)</a></div>
-{% endif %}
+        <span class="breadcrumbs-item {% if sort_slug == '-rate' %}active{% endif %}">
+            {% if sort_slug == '-rate' %}
+                По рейтингу (по убыванию)
+            {% else %}
+                <a href="?sort=-rate">По рейтингу (по убыванию)</a>
+            {% endif %}
+        </span>
 
-
-{% if sort_slug == '-price'%}
-<div>По цене (по убыванию)</div>
-{% else %}
-<div><a href="?sort=-price">По цене (по убыванию)</a></div>
-{% endif %}
-
-{% if sort_slug == 'price'%}
-<div>По цене (по возрастанию)</div>
-{% else %}
-<div><a href="?sort=price">По цене (по возрастанию)</a></div>
-{% endif %}
-
-
-{% if sort_slug == '-rate'%}
-<div>По рейтингу (по убыванию)</div>
-{% else %}
-<div><a href="?sort=-rate">По рейтингу (по убыванию)</a></div>
-{% endif %}
-
-{% if sort_slug == 'rate'%}
-<div>По рейтингу (по возрастанию)</div>
-{% else %}
-<div><a href="?sort=rate">По рейтингу (по возрастанию)</a></div>
-{% endif %}
-
+        <span class="breadcrumbs-item {% if sort_slug == 'rate' %}active{% endif %}">
+            {% if sort_slug == 'rate' %}
+                По рейтингу (по возрастанию)
+            {% else %}
+                <a href="?sort=rate">По рейтингу (по возрастанию)</a>
+            {% endif %}
+        </span>
+    </div>

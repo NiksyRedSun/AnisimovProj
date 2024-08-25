@@ -2,12 +2,19 @@
 
 
 
+<div class="breadcrumbs-section">
+    <span class="breadcrumbs-title">Категории:</span>
+    {% if cat_selected == 0 %}
+        <span class="breadcrumbs-item active">Все категории</span>
+    {% else %}
+        <span class="breadcrumbs-item"><a href="{% url 'home' %}">Все категории</a></span>
+    {% endif %}
 
-
-{% for cat in cats %}
-         {% if cat.id == cat_selected %}
-                   <div>{{cat.name}}</div>
-         {% else %}
-                   <div><a href="{{ cat.get_absolute_url }}">{{cat.name}}</a></div>
-         {% endif %}
-{% endfor %}
+    {% for cat in cats %}
+        {% if cat.id == cat_selected %}
+            <span class="breadcrumbs-item active">{{ cat.name }}</span>
+        {% else %}
+            <span class="breadcrumbs-item"><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></span>
+        {% endif %}
+    {% endfor %}
+</div>

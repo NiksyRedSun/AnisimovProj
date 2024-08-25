@@ -2,13 +2,15 @@
 
 
 {% if tags %}
-    Теги:
+    <div class="breadcrumbs-section">
+        <span class="breadcrumbs-title">Теги:</span>
         {% for t in tags %}
             {% if t.id == tag_selected %}
-                <div>{{t.tag}}</div>
+                <span class="breadcrumbs-item active">{{ t.tag }}</span>
             {% else %}
-                <div><a href="{{ t.get_absolute_url }}">{{t.tag}}</a></div>
+                <span class="breadcrumbs-item"><a href="{{ t.get_absolute_url }}">{{ t.tag }}</a></span>
             {% endif %}
         {% endfor %}
+    </div>
 {% endif %}
 

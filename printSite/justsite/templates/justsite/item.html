@@ -6,6 +6,15 @@
 {% block content %}
 <h1>{{item.name}}</h1>
 
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
 {% with item.tags.all as tags %}
 {% if tags %}
     <div>Теги продукта:</div>
@@ -15,14 +24,6 @@
 {% endif %}
 {% endwith %}
 
-
-{% if messages %}
-<div>
-    {% for message in messages %}
-    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
 
 <div>{{item.description}}</div>
 <div>Цена: {{item.price}} р.</div>

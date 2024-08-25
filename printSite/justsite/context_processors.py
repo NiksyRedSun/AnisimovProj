@@ -5,4 +5,4 @@ menu = [{'title': "О сайте", 'url_name': 'about'},
 
 
 def get_site_context(request):
-    return {'mainmenu': menu}
+    return {'mainmenu': menu, 'index_ignore_list': ['about', 'contact']}

@@ -7,9 +7,9 @@
 
 
 {% if messages %}
-<div>
+<div class="messages">
     {% for message in messages %}
-    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
     {% endfor %}
 </div>
 {% endif %}

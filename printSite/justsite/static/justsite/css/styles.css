@@ -1,5 +1,264 @@
-
-
+/* Основные стили */
 body {
-    background: mediumspringgreen;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Стили для шапки */
+.site-header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.site-title {
+    margin: 0;
+    font-size: 2.5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.site-title a {
+    color: #ffa500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.site-title a:hover {
+    color: #fff;
+}
+
+/* Навигация */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.menu-left a {
+    margin-right: 20px;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.menu-left a:hover {
+    color: #ffa500;
+}
+
+.user-nav a {
+    margin-left: 20px;
+    color: #ffa500;
+    font-size: 1.2em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.user-nav a:hover {
+    color: #fff;
+}
+
+/* Хлебные крошки */
+/* Общие стили для хлебных крошек */
+.breadcrumbs {
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Секции хлебных крошек */
+.breadcrumbs-section {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.breadcrumbs-title {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+/* Элементы хлебных крошек */
+.breadcrumbs-item {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.breadcrumbs-item a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 3px 8px;
+    background-color: #e9e9e9;
+    border-radius: 3px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.breadcrumbs-item a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Активные элементы для категорий, тегов и сортировки */
+.breadcrumbs-item.active {
+    background-color: #007bff;
+    color: #fff;
+    cursor: default;
+    padding: 0px 8px;
+    border-radius: 3px;
+}
+
+
+/* Основной контент */
+.content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    height: 200%;
+}
+
+/* Подвал сайта */
+.site-footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.site-footer p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+/*Блок сообщений*/
+/* Стили для блока сообщений */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Стили для сообщений об успехе */
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Стили для предупреждающих сообщений */
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Стили для карточек товаров */
+.product-card {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-image {
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.product-image img {
+    max-width: 150px;
+    border-radius: 8px;
+}
+
+.product-details {
+    flex-grow: 1;
+}
+
+.product-name {
+    font-size: 1.5em;
+    margin: 0 0 8px;
+}
+
+.product-description {
+    margin: 0 0 8px;
+    color: #666;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Расстояние между ценой и рейтингом */
+}
+
+.product-price {
+    font-weight: bold;
+    margin: 0; /* Убираем нижний отступ */
+}
+
+.product-rating {
+    color: #ff9800;
+    margin: 0; /* Убираем нижний отступ */
+}
+
+.product-links {
+    display: flex;
+    gap: 8px;
+}
+
+.product-links a {
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.product-links .view-product {
+    background-color: #007bff;
+}
+
+.product-links .add-to-cart {
+    background-color: #28a745;
 }

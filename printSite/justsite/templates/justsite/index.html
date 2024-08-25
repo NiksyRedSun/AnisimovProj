@@ -1,52 +1,65 @@
 {% extends 'base.html' %}
 {% load pstags %}
+{% load static %}
+
 
 
 {% block breadcrumbs %}
-<div>Категории:</div>
-{% if cat_selected == 0 %}
-<div>Все категории</div>
-{% else %}
-<div><a href="{% url 'home' %}">Все категории</a></div>
-{% endif %}
+
+{% if request.resolver_match.view_name not in index_ignore_list %}
 
 {% show_categories cat_selected %}
-<br>
 {% show_all_tags tag_selected %}
-<br>
 {% show_sorts sort_selected %}
 
+{% endif %}
+
 {% endblock %}
+
 
 {% block content %}
 
 <h1>{{ title }}</h1>
 
+{% if request.resolver_match.view_name == 'contact' %}
+<div>Здесь можно расположить информацию о контактах</div>
+{% endif %}
+{% if request.resolver_match.view_name == 'about' %}
+<div>Здесь можно расположить информацию о магазине</div>
+{% endif %}
+
 
 {% if messages %}
-<div>
+<div class="messages">
     {% for message in messages %}
-    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
     {% endfor %}
 </div>
 {% endif %}
 
 
 {% for i in items %}
-<div>
- {% if i.photo %}
-       <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
- {% endif %}
-<h3>{{ i.name }}</h3>
-<div>{{i.description}}</div>
-<div>Цена: {{i.price}} р.</div>
-    {% if i.rate %}
-    <div>Рейтинг: {{ i.rate|one_digit_after_dot }}</div>
-    {% endif %}
-<div><a href="{{ i.get_absolute_url }}">Смотреть товар</a></div>
-<div><a href="{% url 'to_cart' i.slug %}">Добавить в корзину</a></div>
+<div class="product-card">
+        <div class="product-image">
+            <img src="{% static 'justsite/images/package.png' %}" alt="My image">
+        </div>
+    <div class="product-details">
+        <h3 class="product-name">{{ i.name }}</h3>
+        <div class="product-description">{{ i.description }}</div>
+        <div class="product-info">
+            <div class="product-price">Цена: {{ i.price }} р.</div>
+            {% if i.rate %}
+                <div class="product-rating">Рейтинг: {{ i.rate|one_digit_after_dot }}</div>
+            {% endif %}
+        </div>
+        <div class="product-links">
+            <a href="{{ i.get_absolute_url }}" class="view-product">Смотреть товар</a>
+            <a href="{% url 'to_cart' i.slug %}" class="add-to-cart">Добавить в корзину</a>
+        </div>
+    </div>
 </div>
 {% endfor %}
+
 
 {% endblock %}
 
