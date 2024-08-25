@@ -93,7 +93,7 @@ class ItemsTags(DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         tag = get_object_or_404(TagItem, slug=self.kwargs['tag_slug'])
-        return self.get_mixin_context(context, title="Тег: " + tag.tag, tag_selected=tag.pk,
+        return self.get_mixin_context(context, title="Тег - " + tag.tag, tag_selected=tag.pk,
                                       sort_selected=self.sort_selected)
 
 

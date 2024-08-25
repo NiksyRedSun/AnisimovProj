@@ -40,9 +40,15 @@
 
 {% for i in items %}
 <div class="product-card">
+        {% if i.photo %}
+        <div class="product-image">
+            <img src="{{i.photo.url}}" alt="{{i.name}}">
+        </div>
+        {% else %}
         <div class="product-image">
             <img src="{% static 'justsite/images/package.png' %}" alt="My image">
         </div>
+        {% endif %}
     <div class="product-details">
         <h3 class="product-name">{{ i.name }}</h3>
         <div class="product-description">{{ i.description }}</div>

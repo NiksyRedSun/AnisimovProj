@@ -24,7 +24,6 @@
                 <div class="user-nav">
                     {% if user.is_authenticated %}
                         <a href="{% url 'users:profile' %}">{{ user.username }}</a>
-                        <a href="{% url 'users:logout' %}">Выйти</a>
                         <a href="{% url 'cart' %}">Корзина</a>
                         <a href="{% url 'orders' %}">Заказы</a>
                     {% else %}
