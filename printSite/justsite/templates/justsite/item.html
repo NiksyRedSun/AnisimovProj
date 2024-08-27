@@ -1,88 +1,113 @@
 {% extends 'base.html' %}
-
-
 {% load pstags %}
+{% load static %}
 
 {% block content %}
-<h1>{{item.name}}</h1>
+<div class="item-page-container">
+    <h1 class="item-page-title">{{ item.name }}</h1>
 
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-    <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
-
-
-{% with item.tags.all as tags %}
-{% if tags %}
-    <div>Теги продукта:</div>
-    {% for t in tags %}
-    <div><a href="{{t.get_absolute_url}}">{{t.tag}}</a></div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
-
-
-<div>{{item.description}}</div>
-<div>Цена: {{item.price}} р.</div>
-{% if item.rate %}
-<div>Рейтинг: {{ item.rate|one_digit_after_dot }}</div>
-{% else %}
-<div>Рейтинг: Еще никто не оценил</div>
-{% endif %}
-<div><a href="{% url 'to_cart' item.slug %}">Добавить в корзину</a></div>
-
-
-{% if post.photo %}
-<p><img class="img-article-left" src="{{post.photo.url}}"></p>
-{% endif %}
-<br>
-
-
-
-{% if user.is_authenticated %}
-{% if not user_comment %}
-<div>Оставить комментарий:</div>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-    <div class="non-field-errors">
-    {% for err in form.non_field_errors %}
-        <p>{{ err }}</p>
-    {% endfor %}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
     </div>
     {% endif %}
 
-    <div>{{ form.text }}</div>
-    <div>{{ form.rating.label }}</div>
-    {% for radio in form.rating %}
-    <div>
-        {{ radio }}
+    {% with item.tags.all as tags %}
+    {% if tags %}
+    <div class="item-page-tags">
+        <strong>Теги продукта:</strong>
+        {% for t in tags %}
+        <span class="item-page-tag"><a href="{{ t.get_absolute_url }}">{{ t.tag }}</a></span>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
-    <input type="submit" value="Оставить комментарий">
-</form>
-{% endif %}
-{% else %}
-<div>Чтобы оставить комментарий - <a href="{% url 'users:login' %}">авторизуйтесь</a></div>
-{% endif %}
+    <div class="item-page-details">
+        {% if item.photo %}
+        <div class="item-page-image">
+            <img src="{{ item.photo.url }}" alt="{{ item.name }}">
+        </div>
+        {% else %}
+        <div class="item-page-image">
+            <img src="{% static 'justsite/images/package.png' %}" alt="My image">
+        </div>
+        {% endif %}
 
+        <div class="item-page-description">
+            <p>{{ item.description }}</p>
+            <div class="item-page-info">
+                <div class="item-page-price">Цена: {{ item.price }} р.</div>
+                <div class="item-page-rating">
+                    {% if item.rate %}
+                    Рейтинг: {{ item.rate|one_digit_after_dot }}
+                    {% else %}
+                    Рейтинг: Еще никто не оценил
+                    {% endif %}
+                </div>
+            </div>
+            <div class="item-page-links">
+                <a href="{% url 'to_cart' item.slug %}" class="item-page-add-to-cart">Добавить в корзину</a>
+            </div>
+        </div>
+    </div>
 
+    {% if user.is_authenticated %}
+    {% if not user_comment %}
+    <div class="item-page-comment-form">
+        <h2>Оставить комментарий:</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="item-page-non-field-errors">
+                {% for err in form.non_field_errors %}
+                <p>{{ err }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
 
-<div>
-    {% for comment in comments %}
-    <div>Пользователь: {{comment.user}}</div>
-    {% if comment.rating is not None %}
-    <div>Оценка: {{comment.rating}}</div>
+            <div class="item-page-form-group">
+                {{ form.text.label_tag }}<br>
+                {{ form.text }}
+            </div>
+            <div class="item-page-form-group">
+                {{ form.rating.label_tag }}<br>
+                {% for radio in form.rating %}
+                <div class="item-page-form-radio">
+                    {{ radio }}
+                </div>
+                {% endfor %}
+            </div>
+            <input type="submit" value="Оставить комментарий" class="item-page-btn-submit">
+        </form>
+    </div>
+    {% endif %}
     {% else %}
-    <div>Без оценки</div>
+    <div class="item-page-login-prompt">
+        Чтобы оставить комментарий - <a href="{% url 'users:login' %}">авторизуйтесь</a>
+    </div>
     {% endif %}
-    <div>Комментарий: {{comment.text}}</div>
-    <br>
-    {% endfor %}
-</div>
 
+    <div class="item-page-comments-section">
+        {% if comments %}
+        <h2>Комментарии:</h2>
+        {% endif %}
+        {% for comment in comments %}
+        <div class="item-page-comment">
+            <div class="item-page-comment-user">Пользователь: {{ comment.user }}</div>
+            <div class="item-page-comment-rating">
+                {% if comment.rating is not None %}
+                Оценка: {{ comment.rating }}
+                {% else %}
+                Без оценки
+                {% endif %}
+            </div>
+            <div class="item-page-comment-text">{{ comment.text }}</div>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

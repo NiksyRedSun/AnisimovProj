@@ -16,16 +16,25 @@
 
 
 {% for i in cart_items %}
-<div>
- {% if i.photo %}
-       <p ><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
- {% endif %}
-<h3>{{ i.name }} x {{i.count}} → {{i.total}} р.</h3>
-    <div><a href="{% url 'item' i.slug %}">Смотреть товар</a></div>
-    <div><a href="{% url 'delete_from_cart' i.slug %}">Удалить товар из корзины</a></div>
+<div class="cart-page-item">
+    {% if i.photo %}
+    <div class="cart-page-item-image">
+        <img src="{{i.photo.url}}" alt="{{i.name}}">
+    </div>
+    {% endif %}
+    <div class="cart-page-item-details">
+        <h3 class="cart-page-item-name">{{ i.name }} x {{i.count}} → {{i.total}} р.</h3>
+        <div class="cart-page-item-actions">
+            <a class="cart-page-link view-product" href="{% url 'item' i.slug %}">Смотреть товар</a>
+            <a class="cart-page-link remove-product" href="{% url 'delete_from_cart' i.slug %}">Удалить товар из корзины</a>
+        </div>
+    </div>
 </div>
 {% endfor %}
-<h2>Итого: {{summ}} р.</h2>
-<div><a href="{% url 'create_order' %}">Сформировать заказ</a></div>
+
+<h2 class="cart-page-total">Итого: {{summ}} р.</h2>
+<div class="cart-page-checkout">
+    <a class="cart-page-link checkout" href="{% url 'create_order' %}">Сформировать заказ</a>
+</div>
 {% endblock %}
 

@@ -6,7 +6,6 @@
 
 <h1>{{ title }}</h1>
 <h2>Представители сайта свяжутся с вами в ближайшее время, чтобы обсудить заказ, если еще этого не сделали</h2>
-<br>
 
 {% if messages %}
 <div class="messages">
@@ -18,33 +17,23 @@
 
 
 {% for order in orders %}
-<div>
-    <h2>Заказ №{{order.id}} от {{order.time_create}}</h2>
-    <h4>Содержимое:</h4>
+<div class="orders-page-order">
+    <h2 class="orders-page-order-title">Заказ №{{order.id}} от {{order.time_create}}</h2>
+    <h4 class="orders-page-order-subtitle">Содержимое:</h4>
     {% for item in orders_items|get_item:order %}
-    {% if item.photo %}
-       <p><img class="img-article-left thumb" src="{{i.photo.url}}"></p>
-    {% endif %}
-    <p>{{ item.item__name }} x {{item.count}} → {{item.total}} р.</p>
-
+    <div class="orders-page-item">
+        <p class="orders-page-item-details">{{ item.item__name }} x {{item.count}} → {{item.total}} р.</p>
+    </div>
     {% endfor %}
+    <h3 class="orders-page-order-summary">Итого: {{order.order_sum}} р.</h3>
+    <h3 class="orders-page-order-status">Статус: {{order.get_status_display}}</h3>
+    <div class="orders-page-order-actions">
+        <a class="orders-page-link cancel-order" href="{% url 'delete_order' order.id %}">Отменить заказ</a>
+    </div>
+    <br>
 </div>
-<h3>Итого: {{order.order_sum}} р.</h3>
-<h3>Статус: {{order.get_status_display}}</h3>
-<div><a href="{% url 'delete_order' order.id %}">Отменить заказ</a></div>
-<br>
 {% endfor %}
-
-
 {% endblock %}
 
 
 
-
-<h2>Итого: {{summ}} р.</h2>
-<div><a href="{% url 'create_order' %}">Сформировать заказ</a></div>
-
-
-<h3>{{ i.name }} x {{i.count}} → {{i.total}} р.</h3>
-    <div><a href="{% url 'item' i.slug %}">Смотреть товар</a></div>
-    <div><a href="{% url 'delete_from_cart' i.slug %}">Удалить товар из корзины</a></div>
